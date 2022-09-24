@@ -2,7 +2,7 @@
      display: grid;
      height: 650px;
      grid-template-columns: 0.3fr 1.7fr 0.1fr 2.6fr 0.3fr;
-     grid-template-rows: 0.3fr 0.1fr 1.7fr 0.2fr 4.3fr 0.1fr 0.3fr;
+     grid-template-rows: 0.3fr 0.1fr 2.5fr 0.2fr 4.3fr 0.1fr 0.3fr;
      gap: 7px 7px;
      grid-auto-flow: row;
      grid-template-areas:
@@ -29,5 +29,14 @@
      border-width: 0.1px;
      background-color:white;
      box-shadow: rgba(0, 0, 0, 0.07) 0px 5px 8px;
+ }
+
+ .container-header {
+    display: grid;
+    align-items: center;
+    background-color: aliceblue;
+    color: skyblue;
+    text-indent: 20px;
+    height: 70px;
  }
  
