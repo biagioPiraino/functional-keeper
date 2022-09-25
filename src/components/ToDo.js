@@ -3,7 +3,15 @@ import './ToDo.css'
 import ToDoEntry from './ToDoEntry'
 
 class ToDo extends Component {
+   constructor(props){
+      super(props);
+   }
+
    render() {
+      const toDoEntries = this.props.items.map(
+         x => <li key={x.id}><ToDoEntry attribute={x} displayAdd={x.displayAdd}/></li>
+      )
+
       return(
          <div className='container todo'>
             <div className='container-header'>
@@ -11,6 +19,7 @@ class ToDo extends Component {
             </div>
             <div className='todo-entries-container'>
                <ul className='todo-entries-list'>
+                  {toDoEntries}
                </ul>
             </div>
          </div>
