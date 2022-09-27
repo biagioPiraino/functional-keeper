@@ -10,21 +10,34 @@ class MainPage extends Component {
    constructor(props) {
       super(props);
       this.state = {
-         todolist: []
-      }
+         todolist: [],
+         dailyTargets: {}
+      };
       this.fetchDailyTodo = this.fetchDailyTodo.bind(this);
    }
 
    componentDidMount() {
       let dailyToDos = this.fetchDailyTodo();
+      let targets, achieved, remaining;
+
+      targets = dailyToDos.length - 1;
+      achieved = dailyToDos.filter(x => x.done === true).length;
+      remaining = targets - achieved;
+
       this.setState({
-         todolist: dailyToDos
+         todolist: dailyToDos,
+         dailyTargets: {
+            targets: targets,
+            achieved: achieved,
+            remaining: remaining
+         }
       });
    }
 
    componentWillUnmount() {
       this.setState({
-         todolist: []
+         todolist: [],
+         dailyTargets: {}
       });
    }
 
@@ -37,7 +50,7 @@ class MainPage extends Component {
       year = today.getFullYear().toString();
 
       const fullDate = `${date}/${month}/${year}`
-      const toDoList = ToDoData.filter(date => date.added == fullDate);
+      const toDoList = ToDoData.filter(date => date.added === fullDate);
 
       toDoList.push({
          displayAdd: true
@@ -52,7 +65,7 @@ class MainPage extends Component {
          <Navbar />
             <div className="mainpage-container">
                <ToDo items={this.state.todolist}/>
-               <Targets />
+               <Targets items={this.state.dailyTargets}/>
                <WeeklyTrack />
             </div>
          </React.Fragment>
