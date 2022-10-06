@@ -1,0 +1,17 @@
+.container-data {
+   display: grid;
+   grid-template: 20px / 1fr 1fr 1fr;
+}
+
+.container-data > div > h2 {
+   color: lightblue;
+   font-size: 19px;
+   text-align: center;
+}
+
+.container-data > div > h1 {
+   color: skyblue;
+   font-size: 40px;
+   text-align: center;
+   margin-bottom: -10px;
+}
