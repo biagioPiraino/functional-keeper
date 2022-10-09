@@ -28,6 +28,18 @@ class WeeklyTrack extends Component {
    }
 
    render() {
+      let planned = [];
+      let undone = [];
+      let done = [];
+      let counter = 0;
+   
+      while (counter < 7) {
+         let dailyTargets = this.props.items.filter(x => x.dayOfWeek === counter);
+         planned.push(dailyTargets.length);
+         undone.push(dailyTargets.filter(x => x.done === false).length);
+         done.push(dailyTargets.filter(x => x.done).length);
+         counter++;
+      }
 
       return(
          <div className='container weeklytrack'>
@@ -44,21 +56,21 @@ class WeeklyTrack extends Component {
                      id: 1,
                      label: 'Planned',
                      backgroundColor: 'rgb(255,255,255)',
-                     data: [5,6,7,5,4,3,6],
+                     data: planned,
                   },
                   {
                      id: 2,
                      label: 'Done',
                      borderColor: 'rgb(34,139,34)',
                      backgroundColor: 'rgb(255,255,255)',
-                     data: [3,2,1,4,1,1,6],
+                     data: done,
                   },
                   {
                      id: 3,
                      label: 'Undone',
                      borderColor: 'rgb(255, 99, 132)',
                      backgroundColor: 'rgb(255,255,255)',
-                     data: [2,4,6,1,3,2,0],
+                     data: undone,
                      },
                   ],
                }}
