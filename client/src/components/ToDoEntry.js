@@ -14,8 +14,7 @@ class ToDoEntry extends Component {
          <React.Fragment>
             <div className='todo-entry-container'>
                <img className='radio-image' src={this.props.attribute.done ? radioon : radiooff} alt='radio-icon'/>
-               <input type="text" className='activity input' value={this.props.attribute.desc} placeholder="What's next?" />
-               <input type="text" className='category input' value={this.props.attribute.category} placeholder="Category" />
+               <input type="text" className='activity input' value={this.props.attribute.description} placeholder="What's next?" />
                {this.props.displayAdd && 
                   <img className='add-image' src={add} alt='add-icon'/>}
             </div>

@@ -4,7 +4,6 @@ import Targets from './Targets'
 import WeeklyTrack from './WeeklyTrack'
 import Navbar from './Navbar'
 import './MainPage.css'
-import ToDoData from './ToDoData'
 
 class MainPage extends Component {
    constructor(props) {
@@ -14,83 +13,42 @@ class MainPage extends Component {
          dailyTargets: {},
          weeklyTrack: []
       };
-      this.fetchDailyTodo = this.fetchDailyTodo.bind(this);
-      this.fetchWeeklyTodo = this.fetchWeeklyTodo.bind(this);
-      this.getCurrentWeekNumber = this.getCurrentWeekNumber.bind(this);
    }
 
    componentDidMount() {
-      // Daily targets
-      let dailyToDos = this.fetchDailyTodo();
-      let targets, achieved, remaining;
-
-      targets = dailyToDos.length - 1;
-      achieved = dailyToDos.filter(x => x.done === true).length;
-      remaining = targets - achieved;
-
       // Weekly targets
-      let currentWeekNumber = this.getCurrentWeekNumber();
-      let weeklyTodo = this.fetchWeeklyTodo(currentWeekNumber);
+      fetch('http://localhost:5000/main')
+         .then(res => res.json())
+         .then(data => {
+            let dailyTargets = data.filter(x => x.dayOfWeek === new Date().getDay());
+            let targets, achieved, remaining;
 
-      this.setState({
-         todolist: dailyToDos,
-         dailyTargets: {
-            targets: targets,
-            achieved: achieved,
-            remaining: remaining
-         },
-         weeklyTrack: weeklyTodo
-      });
+            targets = dailyTargets.length;
+            achieved = dailyTargets.filter(x => x.done === true).length;
+            remaining = targets - achieved;
+
+            dailyTargets.push({
+               displayAdd: true
+            })
+
+            this.setState({
+               dailyTargets: {
+                  targets: targets,
+                  achieved: achieved,
+                  remaining: remaining
+               },
+               todolist: dailyTargets,
+               weeklyTrack: data
+            })})
+         .catch(error => console.log(error));
    }
 
    componentWillUnmount() {
       this.setState({
          todolist: [],
-         dailyTargets: {}
+         dailyTargets: {},
+         weeklyTrack: []
       });
-   }
-
-   fetchDailyTodo() {
-      let date, month, year;
-      const today = new Date();
-      
-      date = today.getDate().toString();
-      month = (today.getMonth() + 1).toString();
-      year = today.getFullYear().toString();
-
-      const fullDate = `${date}/${month}/${year}`
-      const toDoList = ToDoData.filter(date => date.added === fullDate);
-
-      toDoList.push({
-         displayAdd: true
-      })
-
-      return toDoList;
-   }
-
-   getCurrentWeekNumber() {
-      let currentDate, startDate, days;
-      currentDate = new Date();
-      startDate = new Date(currentDate.getFullYear(), 0, 1);
-      days = Math.floor((currentDate - startDate) / (24 * 60 * 60 * 1000));
-      return Math.floor(days / 7);
-   }
-
-   fetchWeeklyTodo(weekNumber) {
-      const toDoList = ToDoData.filter(date => date.weekNumber === weekNumber);
-      let days = 0;
-      let weeklyTodo = [];
-
-      while (days < 7){
-         let toDos =
-            { planned: toDoList.filter(x => x.day === days).length, 
-              done: toDoList.filter(x => x.day === days && x.done).length,
-              undone: toDoList.filter(x => x.day === days && x.done === false).length}
-         weeklyTodo.push(toDos);
-         days++;
-      }
-      
-      console.log(weeklyTodo);
    }
 
    render() {
