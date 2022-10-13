@@ -13,6 +13,8 @@ class MainPage extends Component {
          dailyTargets: {},
          weeklyTrack: []
       };
+      this.handleChange = this.handleChange.bind(this);
+      this.submitRequest = this.submitRequest.bind(this);
    }
 
    componentDidMount() {
@@ -28,6 +30,7 @@ class MainPage extends Component {
             remaining = targets - achieved;
 
             dailyTargets.push({
+               description: '',
                displayAdd: true
             })
 
@@ -43,6 +46,70 @@ class MainPage extends Component {
          .catch(error => console.log(error));
    }
 
+   handleChange(e) {
+      let newTodolist = [...this.state.todolist];
+      let index = newTodolist.findIndex(x => x.displayAdd);
+
+      let itemToChange = {
+         ...newTodolist[index],
+         description: e.target.value,
+      }
+
+      newTodolist[index] = itemToChange;
+
+      this.setState({
+         todolist: newTodolist
+      });
+   }
+
+   submitRequest() {
+      let newTodolist = [...this.state.todolist];
+      let index = newTodolist.findIndex(x => x.displayAdd);
+
+      let itemToChange = {
+         ...newTodolist[index],
+         displayAdd: false
+      }
+
+      newTodolist[index] = itemToChange;
+
+      fetch('http://localhost:5000/add', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(itemToChange)
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+
+      newTodolist.push({
+         description: '',
+         displayAdd: true
+      });
+
+      let newDailyTargets = this.state.dailyTargets
+      newDailyTargets.targets += 1;
+      newDailyTargets.remaining +=1;
+
+      itemToChange.dayOfWeek = new Date().getDay();
+      itemToChange.done = false;
+      
+      let newWeeklyTrack = [...this.state.weeklyTrack];
+      newWeeklyTrack.push(itemToChange);
+
+      this.setState({
+         todolist: newTodolist,
+         dailyTargets: newDailyTargets,
+         weeklyTrack: newWeeklyTrack
+      });
+   }
+
    componentWillUnmount() {
       this.setState({
          todolist: [],
@@ -56,7 +123,7 @@ class MainPage extends Component {
          <React.Fragment>
          <Navbar />
             <div className="mainpage-container">
-               <ToDo items={this.state.todolist}/>
+               <ToDo items={this.state.todolist} handleChange={this.handleChange} handleClick={this.submitRequest}/>
                <Targets items={this.state.dailyTargets}/>
                <WeeklyTrack items={this.state.weeklyTrack}/>
             </div>

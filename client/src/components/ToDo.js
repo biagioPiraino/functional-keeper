@@ -9,7 +9,12 @@ class ToDo extends Component {
 
    render() {
       const toDoEntries = this.props.items.map(
-         x => <li key={x.id}><ToDoEntry attribute={x} displayAdd={x.displayAdd}/></li>
+         x => <li key={x._id}>
+            <ToDoEntry 
+               attribute={x} 
+               handleChange={this.props.handleChange}
+               handleClick={this.props.handleClick} 
+               displayAdd={x.displayAdd}/></li>
       )
 
       return(
