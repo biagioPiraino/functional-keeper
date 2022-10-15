@@ -14,6 +14,7 @@ class ToDo extends Component {
                attribute={x} 
                handleChange={this.props.handleChange}
                handleClick={this.props.handleClick} 
+               handleUpdate={this.props.handleUpdate}
                displayAdd={x.displayAdd}/></li>
       )
 

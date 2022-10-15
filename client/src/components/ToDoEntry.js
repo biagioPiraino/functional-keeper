@@ -6,14 +6,18 @@ import add from '../images/add-icon.png'
 
 class ToDoEntry extends Component {
    constructor(props){
-      super(props)
+      super(props);
    }
 
    render() {
       return(
          <React.Fragment>
             <div className='todo-entry-container'>
-               <img className='radio-image' src={this.props.attribute.done ? radioon : radiooff} alt='radio-icon'/>
+               <img
+                  id={this.props.attribute._id} 
+                  className='radio-image' 
+                  src={this.props.attribute.done ? radioon : radiooff} 
+                  alt='radio-icon' onClick={this.props.handleUpdate}/>
                
                {this.props.displayAdd 
                   ? <input type="text" onChange={this.props.handleChange} 

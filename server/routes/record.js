@@ -2,16 +2,17 @@ const express = require("express");
 const recordRoutes = express.Router();
 const dbo = require("../db/conn");
 const ObjectId = require("mongodb").ObjectId;
- 
+
 module.exports = recordRoutes;
 
 recordRoutes.route("/main").get(function (req, res) {
   let db_connect = dbo.getDb("sample_tracker");
   const currentDateTime = retrieveCurrentDateTimeInfo();
 
-  const query = { 
-  'week' : currentDateTime.week, 
-  'year' : currentDateTime.year };
+  const query = {
+    'week': currentDateTime.week,
+    'year': currentDateTime.year
+  };
 
   db_connect
     .collection("todoTracker")
@@ -19,7 +20,7 @@ recordRoutes.route("/main").get(function (req, res) {
     .toArray(function (err, result) {
       if (err) throw err;
       res.json(result);
-  });
+    });
 });
 
 recordRoutes.route("/add").post(function (req, response) {
@@ -40,7 +41,23 @@ recordRoutes.route("/add").post(function (req, response) {
   });
 });
 
-function retrieveCurrentDateTimeInfo(){
+recordRoutes.route('/:id').post((req, response) => {
+  let db_connect = dbo.getDb("sample_tracker");
+
+  const query = { _id: ObjectId(req.params.id) }
+  let updatedValue = {
+    $set: {
+      done: !req.body.done
+    }
+  };
+
+  db_connect.collection("todoTracker").updateOne(query, updatedValue, function (err, res) {
+    if (err) throw err;
+    response.json(res);
+  });
+});
+
+function retrieveCurrentDateTimeInfo() {
   let currentDate, startDate, days, currentWeek;
   currentDate = new Date();
   startDate = new Date(currentDate.getFullYear(), 0, 1);
